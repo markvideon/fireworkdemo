@@ -8,6 +8,9 @@ public class GenerateKey : MonoBehaviour {
 	private KeyCode hard_key;
 	private string string_key;
 
+    [SerializeField] private int shared_key = 0;
+    [SerializeField] private bool force_shared_key = false;
+
 	// Use this for initialization
 	void Start () {
 		Random.InitState(System.Environment.TickCount);
@@ -32,6 +35,10 @@ public class GenerateKey : MonoBehaviour {
 
 	void AssignKey() {
 		int_key = Random.Range (0, 25);
+
+        if (force_shared_key) {
+            int_key = shared_key;
+        }
 
 		if (int_key == 0) {
 			hard_key = KeyCode.A;

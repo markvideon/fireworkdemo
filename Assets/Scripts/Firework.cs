@@ -22,6 +22,8 @@ public class Firework : MonoBehaviour {
 	public float audioDelay;
 	public bool isBursting;
 
+    [SerializeField]private int pixelOffscreenAllowance;
+
 
 	// Use this for initialization
 	void Start () {
@@ -57,19 +59,21 @@ public class Firework : MonoBehaviour {
 			) {
 			ChildToggleActive (0);
 			ChildToggleActive (1);
-			isBursting = true;
+            rb.velocity = Vector3.zero;
+            isBursting = true;
 			Invoke ("PlayExplosionSound", audioDelay);
 		}
 			
 
 		if (burst_go.activeSelf && !burst_ps.isPlaying ) {
-			isBursting = false;
 			ChildToggleActive (0);
 			ChildToggleActive (1);
 			Reset ();
 		}
 
-		if (cam.WorldToScreenPoint(gameObject.transform.position).y > (cam.pixelHeight)) {
+		if (cam.WorldToScreenPoint(gameObject.transform.position).y > cam.pixelHeight) {
+            Debug.Log(cam.allowDynamicResolution);
+            
 			Reset ();
 		};
 
@@ -129,8 +133,11 @@ public class Firework : MonoBehaviour {
 	}
 
 	void Reset() {
-		rocket_ps.gameObject.SetActive (false);
-		rb.velocity = Vector3.zero;
+
+        rb.velocity = Vector3.zero;
+        rocket_ps.gameObject.SetActive (false);
+        burst_go.gameObject.SetActive(false);
+        isBursting = false;
 		gameObject.transform.position = init_position;
 		rocket_ps.gameObject.SetActive (true);
 
